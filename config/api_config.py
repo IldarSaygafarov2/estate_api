@@ -18,6 +18,13 @@ class RunConfig:
 @dataclass
 class ApiV1Prefix:
     prefix: str = "/v1"
+    balconies: str = '/balconies'
+    conditions: str = '/conditions'
+    districts: str = '/districts'
+    floors: str = '/floors'
+    rooms: str = '/rooms'
+    storeys: str = '/storeys'
+    types: str = '/types'
 
 
 @dataclass

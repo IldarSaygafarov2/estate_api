@@ -3,6 +3,7 @@ from typing import Annotated
 
 from sqlalchemy import (
     TIMESTAMP,
+    DateTime,
     func
 )
 from sqlalchemy.ext.declarative import declared_attr
@@ -15,6 +16,9 @@ from infrastructure.utils import camel_case_to_snake_case
 
 created_at = Annotated[datetime, mapped_column(
     TIMESTAMP, server_default=func.now())]
+updated_at = Annotated[datetime, mapped_column(
+    TIMESTAMP, default=func.now(), onupdate=func.now()
+)]
 
 
 class Base(DeclarativeBase):
