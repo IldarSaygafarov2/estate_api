@@ -25,6 +25,7 @@ class ApiV1Prefix:
     rooms: str = '/rooms'
     storeys: str = '/storeys'
     types: str = '/types'
+    estates: str = '/estates'
 
 
 @dataclass
