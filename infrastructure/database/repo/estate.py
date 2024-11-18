@@ -1,13 +1,22 @@
 from .base import BaseRepo
 
 from sqlalchemy import (
-    insert
+    insert, delete, select, update
 )
+from sqlalchemy.orm import selectinload
 
 from infrastructure.database.models import Estate
 
 
 class EstateRepo(BaseRepo):
+    async def get_all(self):
+        stmt = (
+            select(Estate)
+            .options(selectinload(Estate.images))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
     async def create(
             self,
             name: str,
@@ -37,6 +46,32 @@ class EstateRepo(BaseRepo):
                 room_id=room_id,
                 storey_id=storey_id,
             )
+            .returning(Estate)
+        )
+        result = await self.session.execute(stmt)
+        await self.session.commit()
+        return result.scalar_one()
+
+    async def delete(self, estate_id: int):
+        stmt = (
+            delete(Estate)
+            .where(Estate.id == estate_id)
+        )
+        await self.session.execute(stmt)
+        await self.session.commit()
+
+    async def update(
+            self,
+            estate_id: int,
+            **kwargs
+    ):
+        stmt = (
+            update(Estate)
+            .values(
+                **kwargs
+            )
+            .where(Estate.id == estate_id)
+            .options(selectinload(Estate.images))
             .returning(Estate)
         )
         result = await self.session.execute(stmt)

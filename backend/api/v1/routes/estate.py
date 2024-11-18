@@ -1,11 +1,12 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, UploadFile, File, Form
 
 from backend.app.config import config
 from backend.app.dependencies import get_repo
 from backend.core.interfaces.estate import (
-    EstateDTO
+    EstateDTO,
+    EstateCreateDTO
 )
 from infrastructure.database.repo.requests import RequestsRepo
 from infrastructure.utils.file import create_estate_directory
@@ -14,6 +15,14 @@ router = APIRouter(
     prefix=config.api_prefix.v1.estates,
     tags=["Estate"],
 )
+
+
+@router.get('/', response_model=list[EstateDTO])
+async def get_estates(
+        repo: Annotated[RequestsRepo, Depends(get_repo)]
+):
+    estates = await repo.estate.get_all()
+    return estates
 
 
 @router.post('/', response_model=EstateDTO)
@@ -87,19 +96,10 @@ async def create_estate(
     return EstateDTO.model_validate(result, from_attributes=True)
 
 
-"""
+@router.delete('/{estate_id}', status_code=204)
+async def delete_estate(
+        estate_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+):
+    await repo.estate.delete(estate_id)
 
-{
-  "type_id": 1,
-  "owner_phone": "string",
-  "storey_id": 1,
-  "realtor_phone": "string",
-  "price": "string",
-  "name": "string",
-  "district_id": 1,
-  "balcony_id": 1,
-  "description": "string",
-  "condition_id": 1,
-  "room_id": 1
-}
-"""

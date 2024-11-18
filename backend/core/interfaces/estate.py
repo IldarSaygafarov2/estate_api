@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Optional
+
 from fastapi import UploadFile
 
 from pydantic import BaseModel
@@ -31,15 +33,15 @@ class EstateDTO(BaseModel):
 
 
 class EstateCreateDTO(BaseModel):
-    name: str
-    description: str
-    price: str
-    owner_phone: str
-    realtor_phone: str
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[str] = None
+    owner_phone: Optional[str] = None
+    realtor_phone: Optional[str] = None
 
-    balcony_id: int
-    condition_id: int
-    district_id: int
-    type_id: int
-    room_id: int
-    storey_id: int
+    balcony_id: Optional[int] = None
+    condition_id: Optional[int] = None
+    district_id: Optional[int] = None
+    type_id: Optional[int] = None
+    room_id: Optional[int] = None
+    storey_id: Optional[int] = None

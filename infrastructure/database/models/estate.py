@@ -3,23 +3,23 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.database.models.mixins.int_id_pk import IntIdPkMixin
 from .base import Base, created_at, updated_at
-
+from typing import Optional
 
 class Estate(Base, IntIdPkMixin):
-    name: Mapped[str]
-    description: Mapped[str]
-    price: Mapped[str]
-    owner_phone: Mapped[str]
-    realtor_phone: Mapped[str]
+    name: Mapped[Optional[str]]
+    description: Mapped[Optional[str]]
+    price: Mapped[Optional[str]]
+    owner_phone: Mapped[Optional[str]]
+    realtor_phone: Mapped[Optional[str]]
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
-    balcony_id: Mapped[int] = mapped_column(ForeignKey('balconies.id'))
-    condition_id: Mapped[int] = mapped_column(ForeignKey('conditions.id'))
-    district_id: Mapped[int] = mapped_column(ForeignKey('districts.id'))
-    type_id: Mapped[int] = mapped_column(ForeignKey('types.id'))
-    room_id: Mapped[int] = mapped_column(ForeignKey('rooms.id'))
-    storey_id: Mapped[int] = mapped_column(ForeignKey('storeys.id'))
+    balcony_id: Mapped[Optional[int]] = mapped_column(ForeignKey('balconies.id'))
+    condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id'))
+    district_id: Mapped[Optional[int]] = mapped_column(ForeignKey('districts.id'))
+    type_id: Mapped[Optional[int]] = mapped_column(ForeignKey('types.id'))
+    room_id: Mapped[Optional[int]] = mapped_column(ForeignKey('rooms.id'))
+    storey_id: Mapped[Optional[int]] = mapped_column(ForeignKey('storeys.id'))
 
     images: Mapped[list["Image"]] = relationship(back_populates='estate')
 

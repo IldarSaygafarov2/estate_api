@@ -5,8 +5,10 @@ from backend.api import router as api_router
 
 from backend.app.config import config
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.staticfiles import StaticFiles
 main_app = FastAPI()
+
+main_app.mount("/media", StaticFiles(directory="media"), name="media")
 
 main_app.add_middleware(
     CORSMiddleware,
