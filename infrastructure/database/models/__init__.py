@@ -7,3 +7,4 @@ from .floor import Floor
 from .room import Room
 from .storey import Storey
 from .type import Type
+from .users import User

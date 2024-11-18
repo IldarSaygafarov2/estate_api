@@ -6,11 +6,12 @@ from .balcony import BalconyRepo
 from .condition import ConditionRepo
 from .district import DistrictRepo
 from .estate import EstateRepo
+from .estate_image import EstateImageRepo
 from .floor import FloorRepo
 from .room import RoomRepo
 from .storey import StoreyRepo
 from .type import TypeRepo
-from .estate_image import EstateImageRepo
+from .users import UserRepo
 
 
 @dataclass
@@ -52,3 +53,7 @@ class RequestsRepo:
     @property
     def estate_image(self) -> EstateImageRepo:
         return EstateImageRepo(self.session)
+
+    @property
+    def user(self) -> UserRepo:
+        return UserRepo(self.session)

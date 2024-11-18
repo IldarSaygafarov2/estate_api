@@ -2,13 +2,17 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, Response, status
 
+from backend.app.auth import get_current_user
 from backend.app.config import config
 from backend.app.dependencies import get_repo
+
 from backend.core.interfaces.balcony import (
     BalconyDTO,
     BalconyCreateDTO
 )
+from infrastructure.database.models import User
 from infrastructure.database.repo.requests import RequestsRepo
+
 
 router = APIRouter(
     prefix=config.api_prefix.v1.balconies,
@@ -18,7 +22,8 @@ router = APIRouter(
 
 @router.get('/', response_model=List[BalconyDTO])
 async def get_balconies(
-        repo: Annotated[RequestsRepo, Depends(get_repo)]
+        user: Annotated[User, Depends(get_current_user)],
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
 ):
     balconies = await repo.balcony.get_balconies()
     return balconies
