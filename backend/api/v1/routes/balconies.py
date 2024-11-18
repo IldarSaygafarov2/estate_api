@@ -22,7 +22,6 @@ router = APIRouter(
 
 @router.get('/', response_model=List[BalconyDTO])
 async def get_balconies(
-        user: Annotated[User, Depends(get_current_user)],
         repo: Annotated[RequestsRepo, Depends(get_repo)],
 ):
     balconies = await repo.balcony.get_balconies()
