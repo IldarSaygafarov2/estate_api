@@ -33,6 +33,7 @@ class BalconyRepo(BaseRepo):
           .where(Balcony.id == balcony_id)
         )
         await self.session.execute(stmt)
+        await self.session.commit()
 
     async def update_balcony(self, balcony_id: int, label: str):
         stmt = (
