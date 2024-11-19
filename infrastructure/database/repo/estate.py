@@ -24,12 +24,15 @@ class EstateRepo(BaseRepo):
             price: str,
             owner_phone: str,
             realtor_phone: str,
+            manager_phone: str,
+            notes: str,
             balcony_id: int,
             condition_id: int,
             district_id: int,
             type_id: int,
             room_id: int,
-            storey_id: int
+            storey_id: int,
+            floor_id: int
     ):
         stmt = (
             insert(Estate)
@@ -45,11 +48,23 @@ class EstateRepo(BaseRepo):
                 type_id=type_id,
                 room_id=room_id,
                 storey_id=storey_id,
+                floor_id=floor_id,
+                manager_phone=manager_phone,
+                notes=notes,
             )
             .returning(Estate)
         )
         result = await self.session.execute(stmt)
         await self.session.commit()
+        return result.scalar_one()
+
+    async def get_by_id(self, estate_id: int):
+        stmt = (
+            select(Estate)
+            .where(Estate.id == estate_id)
+            .options(selectinload(Estate.images))
+        )
+        result = await self.session.execute(stmt)
         return result.scalar_one()
 
     async def delete(self, estate_id: int):

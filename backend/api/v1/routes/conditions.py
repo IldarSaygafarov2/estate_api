@@ -24,6 +24,15 @@ async def get_conditions(
     return conditions
 
 
+@router.get('/{condition_id}', response_model=ConditionDTO)
+async def get_condition(
+        condition_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)]
+):
+    condition = await repo.condition.get_condition(condition_id)
+    return ConditionDTO.model_validate(condition, from_attributes=True)
+
+
 @router.post('/', response_model=ConditionDTO)
 async def create_condition(
         repo: Annotated[RequestsRepo, Depends(get_repo)],

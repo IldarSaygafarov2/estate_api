@@ -24,6 +24,15 @@ async def get_districts(
     return districts
 
 
+@router.get('/{district_id}', response_model=DistrictDTO)
+async def get_district(
+        district_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+):
+    district = await repo.district.get_district(district_id)
+    return DistrictDTO.model_validate(district, from_attributes=True)
+
+
 @router.post('/', response_model=DistrictDTO)
 async def create_district(
         repo: Annotated[RequestsRepo, Depends(get_repo)],

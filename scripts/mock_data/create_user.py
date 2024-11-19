@@ -12,5 +12,6 @@ async def add_user(session: AsyncSession):
         await repo.user.add_user(
             username=env.str('USERNAME'),
             password=env.str('PASSWORD'),
+            user_type='CEO'
         )
         await session.commit()

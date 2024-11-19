@@ -18,7 +18,12 @@ class FloorRepo(BaseRepo):
         )
         result = await self.session.execute(stmt)
         await self.session.commit()
-        return result
+        return result.scalar_one()
+
+    async def get_floor(self, floor_id: int):
+        stmt = select(Floor).where(Floor.id == floor_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
 
     async def update(self, floor_id: int, label: str):
         stmt = (

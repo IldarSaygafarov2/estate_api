@@ -1,4 +1,3 @@
-from .base import BaseRepo
 from sqlalchemy import (
     select,
     update,
@@ -7,6 +6,8 @@ from sqlalchemy import (
 )
 
 from infrastructure.database.models import Type
+from .base import BaseRepo
+
 
 class TypeRepo(BaseRepo):
     async def create(self, label: str):
@@ -17,6 +18,11 @@ class TypeRepo(BaseRepo):
         )
         result = await self.session.execute(stmt)
         await self.session.commit()
+        return result.scalar_one()
+
+    async def get_type(self, type_id: int):
+        stmt = select(Type).where(Type.id == type_id)
+        result = await self.session.execute(stmt)
         return result.scalar_one()
 
     async def update(self, type_id: int, label: str):

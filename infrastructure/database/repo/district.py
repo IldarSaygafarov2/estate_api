@@ -21,6 +21,14 @@ class DistrictRepo(BaseRepo):
         await self.session.commit()
         return result.scalar_one()
 
+    async def get_district(self, district_id: int):
+        stmt = (
+            select(District)
+            .where(District.id == district_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def delete_district(self, district_id: int):
         stmt = (
             delete(District)

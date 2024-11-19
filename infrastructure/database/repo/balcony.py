@@ -16,6 +16,14 @@ class BalconyRepo(BaseRepo):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
+    async def get_balcony(self, balcony_id: int):
+        stmt = (
+            select(Balcony)
+            .where(Balcony.id == balcony_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def create_balcony(self, label: str):
         stmt = (
             insert(Balcony)

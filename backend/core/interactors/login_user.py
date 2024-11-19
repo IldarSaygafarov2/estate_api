@@ -14,5 +14,5 @@ class LoginUserInteractor:
         if not user:
             raise ValueError('invalid username or password')
 
-        access_token = self.jwt_service.create_access_token({'sub': login_user.username})
+        access_token = self.jwt_service.create_access_token({'sub': login_user.username, "user_type": user.user_type})
         return access_token

@@ -32,6 +32,14 @@ async def create_floor(
     return FloorDTO.model_validate(new_floor, from_attributes=True)
 
 
+@router.get('/{floor_id}', response_model=FloorDTO)
+async def get_floor(
+        floor_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+):
+    floor = await repo.floor.get_floor(floor_id)
+    return FloorDTO.model_validate(floor, from_attributes=True)
+
 @router.delete('/{floor_id}', status_code=204)
 async def delete_floor(
         floor_id: int,

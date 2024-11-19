@@ -5,12 +5,16 @@ from infrastructure.database.models.mixins.int_id_pk import IntIdPkMixin
 from .base import Base, created_at, updated_at
 from typing import Optional
 
+
 class Estate(Base, IntIdPkMixin):
     name: Mapped[Optional[str]]
     description: Mapped[Optional[str]]
     price: Mapped[Optional[str]]
     owner_phone: Mapped[Optional[str]]
     realtor_phone: Mapped[Optional[str]]
+    manager_phone: Mapped[Optional[str]]
+    notes: Mapped[Optional[str]]
+
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
@@ -20,6 +24,7 @@ class Estate(Base, IntIdPkMixin):
     type_id: Mapped[Optional[int]] = mapped_column(ForeignKey('types.id'))
     room_id: Mapped[Optional[int]] = mapped_column(ForeignKey('rooms.id'))
     storey_id: Mapped[Optional[int]] = mapped_column(ForeignKey('storeys.id'))
+    floor_id: Mapped[Optional[int]] = mapped_column(ForeignKey('floors.id'))
 
     images: Mapped[list["Image"]] = relationship(back_populates='estate')
 

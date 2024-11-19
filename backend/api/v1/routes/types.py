@@ -33,6 +33,15 @@ async def create_type(
     return TypeDTO.model_validate(new_type, from_attributes=True)
 
 
+@router.get('/{type_id}', response_model=TypeDTO)
+async def get_type(
+        type_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+):
+    type_obj = await repo.type.get_type(type_id)
+    return TypeDTO.model_validate(type_obj, from_attributes=True)
+
+
 @router.delete('/{type_id}', status_code=204)
 async def delete_type(
         type_id: int,

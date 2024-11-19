@@ -24,6 +24,15 @@ async def get_storeys(
     return storeys
 
 
+@router.get('/{storey_id}', response_model=StoreyDTO)
+async def get_storey(
+        storey_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)]
+):
+    storey = await repo.storey.get_storey(storey_id)
+    return StoreyDTO.model_validate(storey, from_attributes=True)
+
+
 @router.post('/', response_model=StoreyDTO)
 async def create_storey(
         repo: Annotated[RequestsRepo, Depends(get_repo)],

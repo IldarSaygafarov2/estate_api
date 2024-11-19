@@ -20,6 +20,11 @@ class StoreyRepo(BaseRepo):
         await self.session.commit()
         return result.scalar_one()
 
+    async def get_storey(self, storey_id: int):
+        stmt = select(Storey).where(Storey.id == storey_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def update(self, storey_id: int, label: str):
         stmt = (
             update(Storey)

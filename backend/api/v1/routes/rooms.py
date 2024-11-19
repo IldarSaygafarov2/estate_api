@@ -24,6 +24,15 @@ async def get_rooms(
     return rooms
 
 
+@router.get('/{room_id}', response_model=RoomDTO)
+async def get_room(
+        room_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)]
+):
+    room = await repo.room.get_room(room_id)
+    return RoomDTO.model_validate(room, from_attributes=True)
+
+
 @router.post('/', response_model=RoomDTO)
 async def create_room(
         repo: Annotated[RequestsRepo, Depends(get_repo)],

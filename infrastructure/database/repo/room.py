@@ -17,6 +17,14 @@ class RoomRepo(BaseRepo):
         await self.session.commit()
         return result.scalar_one()
 
+    async def get_room(self, room_id: int):
+        stmt = (
+            select(Room)
+            .where(Room.id == room_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def delete(self, room_id: int):
         stmt = (
             delete(Room)

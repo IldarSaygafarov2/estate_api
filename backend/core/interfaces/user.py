@@ -11,6 +11,11 @@ class LoginUserDTO(BaseModel):
     password: str
 
 
+class ResetPasswordDTO(BaseModel):
+    username: str
+    password: str
+
+
 class UserDTO(BaseModel):
     id: int
     username: str

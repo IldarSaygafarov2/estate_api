@@ -27,6 +27,14 @@ class ConditionRepo(BaseRepo):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
+    async def get_condition(self, condition_id: int):
+        stmt = (
+            select(Condition)
+            .where(Condition.id == condition_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def update_condition(self, condition_id: int, label: str):
         stmt = (
             update(Condition)

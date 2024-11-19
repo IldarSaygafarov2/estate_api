@@ -37,6 +37,15 @@ async def create_balcony(
     return BalconyDTO.model_validate(new_balcony, from_attributes=True)
 
 
+@router.get('/{balcony_id}', response_model=BalconyDTO)
+async def get_balcony(
+        balcony_id: int,
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+):
+    balcony = await repo.balcony.get_balcony(balcony_id)
+    return BalconyDTO.model_validate(balcony, from_attributes=True)
+
+
 @router.delete('/{balcony_id}')
 async def delete_balcony(
         balcony_id: int,
