@@ -40,6 +40,7 @@ class ApiV1Prefix:
     storeys: str = '/storeys'
     types: str = '/types'
     estates: str = '/real-estate'
+    objects: str = '/objects'
     auth: str = '/auth'
 
 

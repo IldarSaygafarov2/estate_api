@@ -10,6 +10,7 @@ from .routes.floors import router as floors_router
 from .routes.rooms import router as rooms_router
 from .routes.storeys import router as storey_router
 from .routes.types import router as type_router
+from .routes.objects import router as objects_router
 
 router = APIRouter(
     prefix=config.api_prefix.v1.prefix
@@ -24,3 +25,4 @@ router.include_router(storey_router)
 router.include_router(type_router)
 router.include_router(estate_router)
 router.include_router(auth_router)
+router.include_router(objects_router)
