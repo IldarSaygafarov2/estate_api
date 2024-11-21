@@ -1,8 +1,7 @@
 from sqlalchemy import delete, insert, select, update
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, query
 
 from infrastructure.database.models import Estate
-
 from .base import BaseRepo
 
 
@@ -12,7 +11,6 @@ class EstateRepo(BaseRepo):
             select(Estate)
             .options(
                 selectinload(Estate.images),
-
                 selectinload(Estate.balcony),
                 selectinload(Estate.condition),
                 selectinload(Estate.type),
@@ -21,6 +19,27 @@ class EstateRepo(BaseRepo):
                 selectinload(Estate.room),
                 selectinload(Estate.district),
             )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
+    async def get_filtered(self, **filters):
+        print(filters)
+
+        stmt = (
+            select(Estate)
+            .options(
+                selectinload(Estate.images),
+                selectinload(Estate.balcony),
+                selectinload(Estate.condition),
+                selectinload(Estate.type),
+                selectinload(Estate.floor),
+                selectinload(Estate.storey),
+                selectinload(Estate.room),
+                selectinload(Estate.district),
+            )
+            .filter_by(**filters)
+
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
