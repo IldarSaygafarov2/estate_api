@@ -1,9 +1,18 @@
+from typing import Optional
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from infrastructure.database.models.mixins.int_id_pk import IntIdPkMixin
+from infrastructure.database.models.balcony import Balcony
+from infrastructure.database.models.condition import Condition
+from infrastructure.database.models.district import District
+from infrastructure.database.models.floor import Floor
+from infrastructure.database.models.room import Room
+from infrastructure.database.models.storey import Storey
+from infrastructure.database.models.type import Type
+
 from .base import Base, created_at, updated_at
-from typing import Optional
+from .mixins.int_id_pk import IntIdPkMixin
 
 
 class Estate(Base, IntIdPkMixin):
@@ -27,6 +36,14 @@ class Estate(Base, IntIdPkMixin):
     floor_id: Mapped[Optional[int]] = mapped_column(ForeignKey('floors.id'))
 
     images: Mapped[list["Image"]] = relationship(back_populates='estate')
+    
+    balcony: Mapped["Balcony"] = relationship(back_populates='estate')
+    condition: Mapped["Condition"] = relationship(back_populates='estate')
+    district: Mapped["District"] = relationship(back_populates='estate')
+    room: Mapped["Room"] = relationship(back_populates='estate')
+    floor: Mapped["Floor"] = relationship(back_populates='estate')
+    storey: Mapped["Storey"] = relationship(back_populates='estate')
+    type: Mapped["Type"] = relationship(back_populates='estate')
 
 
 class Image(Base, IntIdPkMixin):

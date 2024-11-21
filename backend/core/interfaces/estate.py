@@ -4,6 +4,14 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
+from .balcony import BalconyDTO
+from .condition import ConditionDTO
+from .district import DistrictDTO
+from .floor import FloorDTO
+from .room import RoomDTO
+from .storey import StoreyDTO
+from .type import TypeDTO
+
 
 class EstateImageDTO(BaseModel):
     id: int
@@ -24,13 +32,14 @@ class EstateDTO(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    balcony_id: int
-    condition_id: int
-    district_id: int
-    type_id: int
-    room_id: int
-    storey_id: int
-    floor_id: int
+    balcony: BalconyDTO
+    condition: ConditionDTO
+    district: DistrictDTO
+    floor: FloorDTO
+    room: RoomDTO
+    storey: StoreyDTO
+    type: TypeDTO
+    
     images: list[EstateImageDTO]
 
 

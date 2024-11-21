@@ -19,10 +19,10 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_model=list[EstateDTO])
+@router.get('/')
 async def get_estates(
         repo: Annotated[RequestsRepo, Depends(get_repo)],
-):
+) -> list[EstateDTO]:
     estates = await repo.estate.get_all()
     return estates
 

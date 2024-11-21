@@ -1,18 +1,26 @@
-from .base import BaseRepo
-
-from sqlalchemy import (
-    insert, delete, select, update
-)
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.orm import selectinload
 
 from infrastructure.database.models import Estate
+
+from .base import BaseRepo
 
 
 class EstateRepo(BaseRepo):
     async def get_all(self):
         stmt = (
             select(Estate)
-            .options(selectinload(Estate.images))
+            .options(
+                selectinload(Estate.images),
+
+                selectinload(Estate.balcony),
+                selectinload(Estate.condition),
+                selectinload(Estate.type),
+                selectinload(Estate.floor),
+                selectinload(Estate.storey),
+                selectinload(Estate.room),
+                selectinload(Estate.district),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
