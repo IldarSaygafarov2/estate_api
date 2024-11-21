@@ -30,6 +30,7 @@ class EstateDTO(BaseModel):
     type_id: int
     room_id: int
     storey_id: int
+    floor_id: int
     images: list[EstateImageDTO]
 
 
