@@ -10,6 +10,7 @@ from backend.api import router as api_router
 from backend.app.config import config
 from infrastructure.database.setup import create_engine, create_session_pool
 from scripts.mock_data.create_user import add_user
+from middlewares.logging import RequestLoggingMiddleware
 
 
 @asynccontextmanager
@@ -33,6 +34,8 @@ main_app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+main_app.add_middleware(RequestLoggingMiddleware)
 
 main_app.include_router(api_router)
 
