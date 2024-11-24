@@ -27,9 +27,15 @@ main_app = FastAPI(lifespan=app_lifespan,
 
 main_app.mount("/media", StaticFiles(directory="media"), name="media")
 
+origins = [
+    'https://realty-360.vercel.app/real-estate',
+    'http://localhost:3000',
+    'https://realty-360.uz'
+]
+
 main_app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
