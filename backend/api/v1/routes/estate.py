@@ -38,27 +38,29 @@ async def create_estate(
         estate_create: EstateCreateDTO = Body(...),
         files: list[UploadFile] = File(...),
 ):
-    estate_data = estate_create.model_dump()
-    new_estate = await repo.estate.create(**estate_data)
+    try:
+        estate_data = estate_create.model_dump()
+        new_estate = await repo.estate.create(**estate_data)
 
-    estate_directory = create_estate_directory(new_estate.id)
-    images = []
-    for file in files:
-        file_name = file.filename
-        path = estate_directory / file_name
-        with open(path, 'wb') as f:
-            f.write(await file.read())
-        image = await repo.estate_image.create(estate_id=new_estate.id, url=str(path))
-        images.append({
-            'id': image.id,
-            'url': image.url,
-            'created_at': image.created_at,
-            'updated_at': image.updated_at,
-        })
+        estate_directory = create_estate_directory(new_estate.id)
+        images = []
+        for file in files:
+            file_name = file.filename
+            path = estate_directory / file_name
+            with open(path, 'wb') as f:
+                f.write(await file.read())
+            image = await repo.estate_image.create(estate_id=new_estate.id, url=str(path))
+            images.append({
+                'id': image.id,
+                'url': image.url,
+                'created_at': image.created_at,
+                'updated_at': image.updated_at,
+            })
 
-    estate = await repo.estate.get_by_id(new_estate.id)
-    return EstateDTO.model_validate(estate, from_attributes=True)
-
+        estate = await repo.estate.get_by_id(new_estate.id)
+        return EstateDTO.model_validate(estate, from_attributes=True)
+    except Exception as e:
+        raise e
 
 @router.delete('/{real_estate_id}', status_code=204)
 async def delete_estate(
