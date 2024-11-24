@@ -89,7 +89,16 @@ class EstateRepo(BaseRepo):
         stmt = (
             select(Estate)
             .where(Estate.id == estate_id)
-            .options(selectinload(Estate.images))
+            .options(
+                selectinload(Estate.images),
+                selectinload(Estate.balcony),
+                selectinload(Estate.condition),
+                selectinload(Estate.type),
+                selectinload(Estate.floor),
+                selectinload(Estate.storey),
+                selectinload(Estate.room),
+                selectinload(Estate.district),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one()
