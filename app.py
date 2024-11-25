@@ -31,7 +31,7 @@ origins = [
 #    'https://realty-360.vercel.app/real-estate',
     'http://localhost:3000',
     'https://realty-360.uz',
-'https://realty-360test-54ov6l4dq-zafar-umerovs-projects.vercel.app'
+'https://realty-360test.vercel.app'
 ]
 
 main_app.add_middleware(
