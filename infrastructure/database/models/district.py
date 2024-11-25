@@ -10,4 +10,4 @@ class District(Base, IntIdPkMixin):
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
-    estate = relationship('Estate', back_populates='district')
+    # estate = relationship('Estate', back_populates='district')

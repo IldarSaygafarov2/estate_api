@@ -9,16 +9,7 @@ class EstateRepo(BaseRepo):
     async def get_all(self):
         stmt = (
             select(Estate)
-            .options(
-                selectinload(Estate.images),
-                selectinload(Estate.balcony),
-                selectinload(Estate.condition),
-                selectinload(Estate.type),
-                selectinload(Estate.floor),
-                selectinload(Estate.storey),
-                selectinload(Estate.room),
-                selectinload(Estate.district),
-            )
+            .options(selectinload(Estate.images))
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
@@ -28,16 +19,6 @@ class EstateRepo(BaseRepo):
 
         stmt = (
             select(Estate)
-            .options(
-                selectinload(Estate.images),
-                selectinload(Estate.balcony),
-                selectinload(Estate.condition),
-                selectinload(Estate.type),
-                selectinload(Estate.floor),
-                selectinload(Estate.storey),
-                selectinload(Estate.room),
-                selectinload(Estate.district),
-            )
             .filter_by(**filters)
 
         )
@@ -53,13 +34,13 @@ class EstateRepo(BaseRepo):
             realtor_phone: str,
             manager_phone: str,
             notes: str,
-            balcony_id: int,
-            condition_id: int,
-            district_id: int,
-            type_id: int,
-            room_id: int,
-            storey_id: int,
-            floor_id: int
+            balcony: str,
+            condition: str,
+            district: str,
+            type: str,
+            room: str,
+            storey: str,
+            floor: str
     ):
         stmt = (
             insert(Estate)
@@ -69,13 +50,13 @@ class EstateRepo(BaseRepo):
                 price=price,
                 owner_phone=owner_phone,
                 realtor_phone=realtor_phone,
-                balcony_id=balcony_id,
-                condition_id=condition_id,
-                district_id=district_id,
-                type_id=type_id,
-                room_id=room_id,
-                storey_id=storey_id,
-                floor_id=floor_id,
+                balcony=balcony,
+                condition=condition,
+                district=district,
+                type=type,
+                room=room,
+                storey=storey,
+                floor=floor,
                 manager_phone=manager_phone,
                 notes=notes,
             )
@@ -89,16 +70,7 @@ class EstateRepo(BaseRepo):
         stmt = (
             select(Estate)
             .where(Estate.id == estate_id)
-            .options(
-                selectinload(Estate.images),
-                selectinload(Estate.balcony),
-                selectinload(Estate.condition),
-                selectinload(Estate.type),
-                selectinload(Estate.floor),
-                selectinload(Estate.storey),
-                selectinload(Estate.room),
-                selectinload(Estate.district),
-            )
+            .options(selectinload(Estate.images))
         )
         result = await self.session.execute(stmt)
         return result.scalar_one()

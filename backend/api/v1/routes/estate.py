@@ -22,15 +22,9 @@ router = APIRouter(
 @router.get('/')
 async def get_estates(
         repo: Annotated[RequestsRepo, Depends(get_repo)],
-        filters: EstateFilter = Depends(EstateFilter),
+
 ) -> list[EstateDTO]:
-    filters = {key: value for key, value in filters.__dict__.items() if value is not None}
-    if not filters:
-        return await repo.estate.get_all()
-
-    filtered = await repo.estate.get_filtered(**filters)
-    return filtered
-
+    return await repo.estate.get_all()
 
 @router.post('/')
 async def create_estate(

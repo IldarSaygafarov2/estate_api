@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.database.models.balcony import Balcony
@@ -27,23 +27,23 @@ class Estate(Base, IntIdPkMixin):
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
-    balcony_id: Mapped[Optional[int]] = mapped_column(ForeignKey('balconies.id'))
-    condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id'))
-    district_id: Mapped[Optional[int]] = mapped_column(ForeignKey('districts.id'))
-    type_id: Mapped[Optional[int]] = mapped_column(ForeignKey('types.id'))
-    room_id: Mapped[Optional[int]] = mapped_column(ForeignKey('rooms.id'))
-    storey_id: Mapped[Optional[int]] = mapped_column(ForeignKey('storeys.id'))
-    floor_id: Mapped[Optional[int]] = mapped_column(ForeignKey('floors.id'))
+    # balcony_id: Mapped[Optional[int]] = mapped_column(ForeignKey('balconies.id'))
+    # condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id'))
+    # district_id: Mapped[Optional[int]] = mapped_column(ForeignKey('districts.id'))
+    # type_id: Mapped[Optional[int]] = mapped_column(ForeignKey('types.id'))
+    # room_id: Mapped[Optional[int]] = mapped_column(ForeignKey('rooms.id'))
+    # storey_id: Mapped[Optional[int]] = mapped_column(ForeignKey('storeys.id'))
+    # floor_id: Mapped[Optional[int]] = mapped_column(ForeignKey('floors.id'))
 
     images: Mapped[list["Image"]] = relationship(back_populates='estate')
     
-    balcony: Mapped["Balcony"] = relationship(back_populates='estate')
-    condition: Mapped["Condition"] = relationship(back_populates='estate')
-    district: Mapped["District"] = relationship(back_populates='estate')
-    room: Mapped["Room"] = relationship(back_populates='estate')
-    floor: Mapped["Floor"] = relationship(back_populates='estate')
-    storey: Mapped["Storey"] = relationship(back_populates='estate')
-    type: Mapped["Type"] = relationship(back_populates='estate')
+    balcony: Mapped[str] = mapped_column(String, nullable=True)
+    condition: Mapped[str] = mapped_column(String, nullable=True)
+    district: Mapped[str] = mapped_column(String, nullable=True)
+    room: Mapped[str] = mapped_column(String, nullable=True)
+    floor: Mapped[str] = mapped_column(String, nullable=True)
+    storey: Mapped[str] = mapped_column(String, nullable=True)
+    type: Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Image(Base, IntIdPkMixin):

@@ -10,4 +10,4 @@ class Floor(Base, IntIdPkMixin):
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
-    estate = relationship('Estate', back_populates='floor')
+    # estate = relationship('Estate', back_populates='floor')
