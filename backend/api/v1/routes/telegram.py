@@ -35,6 +35,12 @@ async def send_to_channel(
     print(req.base_url)
     estates = await repo.estate.get_estates_by_ids(estate_ids)
 
+    # estate_images = []
+
+    # for estate in estates:
+    #     for image in estate.images:
+    #         estate_images.append(image.url)
+
     for estate in estates:
         message = create_telegram_message(
             name=estate.name,
@@ -56,9 +62,21 @@ async def send_to_channel(
                 "type": "photo",
                 "media": f"{req.base_url}{image_url.url}",
             }
+            if idx == 0:
+                obj["caption"] = message
+            data.append(obj)
 
+        print(data)
         async with aiohttp.ClientSession() as session:
-
+            # form_data = aiohttp.FormData()
+            # for media in data:
+            #     form_data.add_field(
+            #         "media",
+            #         media["media"],  # Файл как объект
+            #         filename=media["filename"],  # Можно указать имя файла
+            #         content_type="image/jpeg",  # Указание типа контента
+            #     )
+            # params["caption"] = message
             async with session.post(
                 TELEGRAM_API_URL,
                 params=params,
