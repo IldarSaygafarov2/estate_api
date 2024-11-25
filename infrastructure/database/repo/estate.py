@@ -100,3 +100,13 @@ class EstateRepo(BaseRepo):
         result = await self.session.execute(stmt)
         await self.session.commit()
         return result.scalar_one()
+    
+    async def get_estates_by_ids(self, estates_ids: list[int]):
+        stmt = (
+            select(Estate)
+            .where(Estate.id.in_(estates_ids))
+            .options(selectinload(Estate.images))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+    

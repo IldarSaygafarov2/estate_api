@@ -43,6 +43,28 @@ class EstateDTO(BaseModel):
     images: Optional[list[EstateImageDTO]]
 
 
+
+class EstateForChannelDTO(BaseModel):
+    id: Optional[int] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[str] = None
+    realtor_phone: Optional[str] = None
+    manager_phone: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+    balcony: Optional[str] = None
+    condition: Optional[str] = None
+    district: Optional[str] = None
+    type: Optional[str] = None
+    room: Optional[str] = None
+    storey: Optional[str] = None
+    floor: Optional[str] = None
+    
+    images: Optional[list[EstateImageDTO]]
+
+
 class EstateCreateDTO(BaseModel):
     name: str
     price: str

@@ -41,6 +41,7 @@ class ApiV1Prefix:
     types: str = '/types'
     estates: str = '/real-estate'
     objects: str = '/objects'
+    telegram: str = '/telegram'
     auth: str = '/auth'
 
 
