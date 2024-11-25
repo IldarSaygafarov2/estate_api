@@ -32,6 +32,7 @@ async def send_to_channel(
     repo: Annotated[RequestsRepo, Depends(get_repo)],
     req: Request,
 ):
+    print(req.base_url)
     estates = await repo.estate.get_estates_by_ids(estate_ids)
 
     for estate in estates:
@@ -55,15 +56,20 @@ async def send_to_channel(
                 "type": "photo",
                 "media": f"{req.base_url}{image_url.url}",
             }
-            if idx == 0:
-                obj["caption"] = message
-            data.append(obj)
 
         async with aiohttp.ClientSession() as session:
-            r = await session.post(
+
+            async with session.post(
                 TELEGRAM_API_URL,
                 params=params,
                 json={"media": data},
-            )
-            print(r)
-    return {"is_send": True}
+            ) as response:
+                # Проверка статуса ответа
+                if response.status == 200:
+                    return {
+                        "status": "success",
+                        "message": "Media group sent successfully.",
+                    }
+                else:
+                    error_data = await response.json()
+                    return {"status": "error", "message": error_data}
