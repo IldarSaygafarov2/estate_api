@@ -22,34 +22,35 @@ async def app_lifespan(app: FastAPI):
     yield
 
 
-main_app = FastAPI(lifespan=app_lifespan,
-                   default_response_class=ORJSONResponse, )
+main_app = FastAPI(
+    lifespan=app_lifespan,
+    default_response_class=ORJSONResponse,
+)
 
 main_app.mount("/media", StaticFiles(directory="media"), name="media")
 
 origins = [
-#    'https://realty-360.vercel.app/real-estate',
-    'http://localhost:3000',
-    'https://realty-360.uz',
-'https://realty-360test.vercel.app'
+    "http://localhost:3000",
+    "https://realty-360.uz",
+    "https://realty-360test.vercel.app",
 ]
 
 main_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*']
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 main_app.add_middleware(RequestLoggingMiddleware)
 
 main_app.include_router(api_router)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run(
-        'app:main_app',
+        "app:main_app",
         host=config.run_api.api_host,
         port=config.run_api.api_port,
-        reload=True
+        reload=True,
     )
