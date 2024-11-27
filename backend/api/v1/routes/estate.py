@@ -37,7 +37,7 @@ async def create_estate(
         images = []
         for file in files:
             file_name = file.filename
-            path = estate_directory / slugify(file_name)
+            path = estate_directory / file_name
             with open(path, "wb") as f:
                 f.write(await file.read())
             image = await repo.estate_image.create(

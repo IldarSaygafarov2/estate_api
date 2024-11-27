@@ -32,7 +32,7 @@ async def send_to_channel(
     repo: Annotated[RequestsRepo, Depends(get_repo)],
     req: Request,
 ):
-    print(req.base_url)
+    print('SSSSSSSSSSSSSSS')
     estates = await repo.estate.get_estates_by_ids(estate_ids)
 
     # estate_images = []
@@ -57,10 +57,13 @@ async def send_to_channel(
         )
         data = []
         for idx, image_url in enumerate(estate.images):
+            print()
+            url = f'{req.base_url}{image_url.url}'
+            url = url.replace('\\', '/')
             obj = {
-                "filename": image_url.url.split("/")[-1],
+                "filename": image_url.url.split("\\")[-1],
                 "type": "photo",
-                "media": f"{req.base_url}{image_url.url}",
+                "media": url,
             }
             if idx == 0:
                 obj["caption"] = message
@@ -83,11 +86,13 @@ async def send_to_channel(
                 json={"media": data},
             ) as response:
                 # Проверка статуса ответа
-                if response.status == 200:
-                    return {
-                        "status": "success",
-                        "message": "Media group sent successfully.",
-                    }
-                else:
-                    error_data = await response.json()
-                    return {"status": "error", "message": error_data}
+                pass
+                # if response.status == 200:
+                #     return {
+                #         "status": "success",
+                #         "message": "Media group sent successfully.",
+                #     }
+                # else:
+                #     error_data = await response.json()
+                #     return {"status": "error", "message": error_data}
+    return 'sent'
