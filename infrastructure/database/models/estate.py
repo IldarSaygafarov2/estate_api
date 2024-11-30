@@ -18,7 +18,7 @@ from .mixins.int_id_pk import IntIdPkMixin
 class Estate(Base, IntIdPkMixin):
     name: Mapped[Optional[str]]
     description: Mapped[Optional[str]]
-    price: Mapped[Optional[str]]
+    price: Mapped[Optional[int]]
     owner_phone: Mapped[Optional[str]]
     realtor_phone: Mapped[Optional[str]]
     manager_phone: Mapped[Optional[str]]

@@ -1,8 +1,12 @@
-from sqlalchemy import delete, insert, select, update
+from sqlalchemy import (
+    delete,
+    insert,
+    select,
+    update
+)
 from sqlalchemy.orm import selectinload
 
 from infrastructure.database.models import Estate
-
 from .base import BaseRepo
 
 
@@ -13,9 +17,23 @@ class EstateRepo(BaseRepo):
         return result.scalars().all()
 
     async def get_filtered(self, **filters):
-        print(filters)
+        price_min = filters.pop('price_min', None)
+        price_max = filters.pop('price_max', None)
 
-        stmt = select(Estate).filter_by(**filters)
+        stmt = (
+            select(Estate)
+            .options(selectinload(Estate.images))
+            .filter_by(**filters)
+        )
+
+        if price_min is not None and price_max is not None:
+            stmt = (
+                stmt
+                .where(Estate.price > price_min)
+                .where(Estate.price < price_max)
+            )
+
+        stmt = stmt.filter_by(**filters)
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
@@ -23,7 +41,7 @@ class EstateRepo(BaseRepo):
         self,
         name: str,
         description: str,
-        price: str,
+            price: int,
         owner_phone: str,
         realtor_phone: str,
         manager_phone: str,

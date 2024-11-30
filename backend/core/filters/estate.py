@@ -1,18 +1,12 @@
-from fastapi import Query
-from dataclasses import dataclass
 from typing import Optional
 
+from pydantic import BaseModel, Field
 
-@dataclass
-class EstateFilter:
-    balcony_id: Optional[int] = Query(None)
-    district_id: Optional[int] = Query(None)
-    room_id: Optional[int] = Query(None)
-    type_id: Optional[int] = Query(None)
-    floor_id: Optional[int] = Query(None)
-    storey_id: Optional[int] = Query(None)
-    condition_id: Optional[int] = Query(None)
 
-    name: Optional[str] = Query(None)
-    price: Optional[str] = Query(None)
-
+class EstateFilter(BaseModel):
+    condition: Optional[str] = Field(None)
+    district: Optional[str] = Field(None)
+    rooms: Optional[str] = Field(None)
+    type: Optional[str] = Field(None)
+    price_min: Optional[int] = Field(None)
+    price_max: Optional[int] = Field(None)

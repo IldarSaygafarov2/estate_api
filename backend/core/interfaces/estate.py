@@ -4,6 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
+
 # from .balcony import BalconyDTO
 # from .condition import ConditionDTO
 # from .district import DistrictDTO
@@ -24,7 +25,7 @@ class EstateDTO(BaseModel):
     id: Optional[int] = None
     name: Optional[str] = None
     description: Optional[str] = None
-    price: Optional[str] = None
+    price: Optional[int] = None
     owner_phone: Optional[str] = None
     realtor_phone: Optional[str] = None
     manager_phone: Optional[str] = None
@@ -39,16 +40,15 @@ class EstateDTO(BaseModel):
     room: Optional[str] = None
     storey: Optional[str] = None
     floor: Optional[str] = None
-    
-    images: Optional[list[EstateImageDTO]]
 
+    images: Optional[list[EstateImageDTO]]
 
 
 class EstateForChannelDTO(BaseModel):
     id: Optional[int] = None
     name: Optional[str] = None
     description: Optional[str] = None
-    price: Optional[str] = None
+    price: Optional[int] = None
     realtor_phone: Optional[str] = None
     manager_phone: Optional[str] = None
     created_at: datetime
@@ -61,13 +61,13 @@ class EstateForChannelDTO(BaseModel):
     room: Optional[str] = None
     storey: Optional[str] = None
     floor: Optional[str] = None
-    
+
     images: Optional[list[EstateImageDTO]]
 
 
 class EstateCreateDTO(BaseModel):
     name: str
-    price: str
+    price: int
     description: Optional[str] = None
     owner_phone: Optional[str] = None
     realtor_phone: Optional[str] = None
@@ -92,7 +92,7 @@ class EstateCreateDTO(BaseModel):
 
 class EstateUpdateDTO(BaseModel):
     name: Optional[str] = None
-    price: Optional[str] = None
+    price: Optional[int] = None
     description: Optional[str] = None
     owner_phone: Optional[str] = None
     realtor_phone: Optional[str] = None

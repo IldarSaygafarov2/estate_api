@@ -1,6 +1,6 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, File, UploadFile
+from fastapi import APIRouter, Body, Depends, File, UploadFile, Query
 
 from backend.app.config import config
 from backend.app.dependencies import get_repo
@@ -8,7 +8,6 @@ from backend.core.filters.estate import EstateFilter
 from backend.core.interfaces.estate import EstateCreateDTO, EstateDTO, EstateUpdateDTO
 from infrastructure.database.repo.requests import RequestsRepo
 from infrastructure.utils.file import create_estate_directory
-from slugify import slugify
 
 router = APIRouter(
     prefix=config.api_prefix.v1.estates,
@@ -18,9 +17,13 @@ router = APIRouter(
 
 @router.get("/")
 async def get_estates(
-    repo: Annotated[RequestsRepo, Depends(get_repo)],
+        filters: Annotated[EstateFilter, Query()],
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
 ) -> list[EstateDTO]:
-    return await repo.estate.get_all()
+    filters = {k: v for k, v in filters.model_dump().items() if v is not None}
+    if not filters:
+        return await repo.estate.get_all()
+    return await repo.estate.get_filtered(**filters)
 
 
 @router.post("/")
