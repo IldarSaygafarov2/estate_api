@@ -34,6 +34,7 @@ origins = [
     "http://localhost:3000",
     "https://realty-360.uz",
     "https://realty-360test.vercel.app",
+    "http://192.168.100.134:3000",
 ]
 
 main_app.add_middleware(
