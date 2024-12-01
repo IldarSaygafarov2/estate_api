@@ -89,22 +89,26 @@ async def update_estate(
 
     image_ids = data.get("images_ids", None)
 
-    # estate_images = await repo.estate_image.get_estate_images(real_estate_id)
-    # for image in estate_images:
-    #     await repo.estate_image.delete(image.id)
+    estate_images = await repo.estate_image.get_estate_images(estate_id=real_estate_id)
+    estate_images_ids = [
+        image.id for image in estate_images if image.id not in image_ids
+    ]
+    print(estate_images_ids)
+
+    for image_id in estate_images_ids:
+        print(image_id)
+        await repo.estate_image.delete(estate_image_id=image_id)
 
     estate_directory = create_estate_directory(real_estate_id)
 
     if files is not None:
         for idx, file in enumerate(files):
-            # print("AAAAA", image_ids[idx])
             file_name = file.filename
             path = estate_directory / file_name
             with open(path, "wb") as f:
                 f.write(await file.read())
 
             try:
-                # image = await repo.estate_image.get_by_id(estate_image_id=image_ids[idx])
                 await repo.estate_image.update(
                     image_estate_id=image_ids[idx], url=str(path)
                 )
@@ -113,22 +117,6 @@ async def update_estate(
                     await repo.estate_image.create(
                         estate_id=real_estate_id, url=str(path)
                     )
-
-        # try:
-        #     # print(image_ids[idx])
-        #     image = await repo.estate_image.get_by_id(estate_image_id=image_ids[idx])
-        #     # print(image.url)
-        #     await repo.estate_image.update(image_estate_id=image.id, url=str(path))
-        # except Exception as e:
-        #     print(e)
-        #     pass
-
-        # try:
-        #     await repo.estate_image.update(
-        #         image_estate_id=image_ids[idx], url=str(path)
-        #     )
-        # except:
-        #     await repo.estate_image.create(estate_id=real_estate_id, url=str(path))
 
     if image_ids is not None:
         data.pop("images_ids")

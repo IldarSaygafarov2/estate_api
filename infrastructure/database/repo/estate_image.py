@@ -31,6 +31,7 @@ class EstateImageRepo(BaseRepo):
         stmt = delete(Image).where(Image.id == estate_image_id)
         await self.session.execute(stmt)
         await self.session.commit()
+        print("deleted")
 
     async def get_by_id(self, estate_image_id: int):
         stmt = select(Image).where(Image.id == estate_image_id)
