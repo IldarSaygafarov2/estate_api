@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from backend.api import router as api_router
 from backend.app.config import config
 from infrastructure.database.setup import create_engine, create_session_pool
-from scripts.mock_data.create_user import add_user
+from scripts.mock_data.create_user import add_ceo_user, add_employee_user
 from middlewares.logging import RequestLoggingMiddleware
 
 
@@ -18,7 +18,8 @@ async def app_lifespan(app: FastAPI):
     engine = create_engine(db=config.db)
     session_pool = create_session_pool(engine)
     async with session_pool() as session:
-        await add_user(session=session)
+        await add_ceo_user(session=session)
+        await add_employee_user(session=session)
     yield
 
 
