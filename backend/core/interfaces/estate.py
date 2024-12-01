@@ -82,7 +82,7 @@ class EstateCreateDTO(BaseModel):
     storey: str
     floor: str
 
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
@@ -99,15 +99,17 @@ class EstateUpdateDTO(BaseModel):
     manager_phone: Optional[str] = None
     notes: Optional[str] = None
 
-    balcony: str
-    condition: str
-    district: str
-    type: str
-    room: str
-    storey: str
-    floor: str
+    balcony: Optional[str] = None
+    condition: Optional[str] = None
+    district: Optional[str] = None
+    type: Optional[str] = None
+    room: Optional[str] = None
+    storey: Optional[str] = None
+    floor: Optional[str] = None
 
-    @model_validator(mode='before')
+    images_ids: Optional[list[int]] = None
+
+    @model_validator(mode="before")
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):

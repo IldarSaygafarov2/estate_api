@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional, List
 
 from fastapi import APIRouter, Body, Depends, File, UploadFile, Query
 
@@ -17,8 +17,8 @@ router = APIRouter(
 
 @router.get("/")
 async def get_estates(
-        filters: Annotated[EstateFilter, Query()],
-        repo: Annotated[RequestsRepo, Depends(get_repo)],
+    filters: Annotated[EstateFilter, Query()],
+    repo: Annotated[RequestsRepo, Depends(get_repo)],
 ) -> list[EstateDTO]:
     filters = {k: v for k, v in filters.model_dump().items() if v is not None}
     if not filters:
@@ -83,22 +83,56 @@ async def update_estate(
     real_estate_id: int,
     repo: Annotated[RequestsRepo, Depends(get_repo)],
     estate_update: EstateUpdateDTO = Body(...),
-    files: list[UploadFile] = File(...),
+    files: Optional[list[UploadFile]] = File(None),
 ):
-    print(files)
-    estate_images = await repo.estate_image.get_estate_images(real_estate_id)
-    for image in estate_images:
-        await repo.estate_image.delete(image.id)
+    data = estate_update.model_dump()
+
+    image_ids = data.get("images_ids", None)
+
+    # estate_images = await repo.estate_image.get_estate_images(real_estate_id)
+    # for image in estate_images:
+    #     await repo.estate_image.delete(image.id)
 
     estate_directory = create_estate_directory(real_estate_id)
-    for file in files:
-        file_name = file.filename
-        path = estate_directory / file_name
-        with open(path, "wb") as f:
-            f.write(await file.read())
-        await repo.estate_image.create(estate_id=real_estate_id, url=str(path))
 
-    data = estate_update.model_dump()
+    if files is not None:
+        for idx, file in enumerate(files):
+            # print("AAAAA", image_ids[idx])
+            file_name = file.filename
+            path = estate_directory / file_name
+            with open(path, "wb") as f:
+                f.write(await file.read())
+
+            try:
+                # image = await repo.estate_image.get_by_id(estate_image_id=image_ids[idx])
+                await repo.estate_image.update(
+                    image_estate_id=image_ids[idx], url=str(path)
+                )
+            except IndexError:
+                if len(files) > len(image_ids):
+                    await repo.estate_image.create(
+                        estate_id=real_estate_id, url=str(path)
+                    )
+
+        # try:
+        #     # print(image_ids[idx])
+        #     image = await repo.estate_image.get_by_id(estate_image_id=image_ids[idx])
+        #     # print(image.url)
+        #     await repo.estate_image.update(image_estate_id=image.id, url=str(path))
+        # except Exception as e:
+        #     print(e)
+        #     pass
+
+        # try:
+        #     await repo.estate_image.update(
+        #         image_estate_id=image_ids[idx], url=str(path)
+        #     )
+        # except:
+        #     await repo.estate_image.create(estate_id=real_estate_id, url=str(path))
+
+    if image_ids is not None:
+        data.pop("images_ids")
+
     data = dict([(x, y) for x, y in data.items() if y is not None])
     updated_estate = await repo.estate.update(real_estate_id, **data)
 
