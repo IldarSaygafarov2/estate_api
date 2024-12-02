@@ -24,23 +24,14 @@ def create_telegram_message(**kwargs):
 {kwargs['description']}
 
 Балкон: {kwargs['balcony']}
-
 Состояние: {kwargs['condition']}
-
 Район: {kwargs['district']}
-
 Комнат: {kwargs['room']}
-
 Этаж: {kwargs['floor']}
-
 Этажность: {kwargs['storey']}
-
 Тип: {kwargs['type']}
-
 Цена: {kwargs['price']}
-
 Номер риелтора: {kwargs['realtor_phone']}
-
 Номер менеджера: {kwargs['manager_phone']}
 """
 
