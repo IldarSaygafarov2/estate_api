@@ -32,7 +32,6 @@ async def send_to_channel(
     repo: Annotated[RequestsRepo, Depends(get_repo)],
     req: Request,
 ):
-    print('SSSSSSSSSSSSSSS')
     estates = await repo.estate.get_estates_by_ids(estate_ids)
 
     # estate_images = []
@@ -41,6 +40,7 @@ async def send_to_channel(
     #     for image in estate.images:
     #         estate_images.append(image.url)
 
+    errors = []
     for estate in estates:
         message = create_telegram_message(
             name=estate.name,
@@ -52,16 +52,18 @@ async def send_to_channel(
             room=estate.room,
             storey=estate.storey,
             type=estate.type,
+            price=estate.price,
             realtor_phone=estate.realtor_phone,
             manager_phone=estate.manager_phone,
         )
         data = []
         for idx, image_url in enumerate(estate.images):
             print()
-            url = f'{req.base_url}{image_url.url}'
-            url = url.replace('\\', '/')
+            url = f"{req.base_url}{image_url.url}"
+            url = url.replace("\\", "/")
+
             obj = {
-                "filename": image_url.url.split("\\")[-1],
+                "filename": url.split("/")[-1],
                 "type": "photo",
                 "media": url,
             }
@@ -71,28 +73,11 @@ async def send_to_channel(
 
         print(data)
         async with aiohttp.ClientSession() as session:
-            # form_data = aiohttp.FormData()
-            # for media in data:
-            #     form_data.add_field(
-            #         "media",
-            #         media["media"],  # Файл как объект
-            #         filename=media["filename"],  # Можно указать имя файла
-            #         content_type="image/jpeg",  # Указание типа контента
-            #     )
-            # params["caption"] = message
             async with session.post(
                 TELEGRAM_API_URL,
                 params=params,
                 json={"media": data},
             ) as response:
                 # Проверка статуса ответа
-                pass
-                # if response.status == 200:
-                #     return {
-                #         "status": "success",
-                #         "message": "Media group sent successfully.",
-                #     }
-                # else:
-                #     error_data = await response.json()
-                #     return {"status": "error", "message": error_data}
-    return 'sent'
+                errors.append(await response.json())
+    return errors
