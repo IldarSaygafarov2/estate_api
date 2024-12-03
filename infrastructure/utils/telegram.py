@@ -32,7 +32,7 @@ def create_telegram_message(**kwargs):
 Тип: {kwargs['type']}
 Цена: {kwargs['price']}
 Номер риелтора: {kwargs['realtor_phone']}
-Номер менеджера: {kwargs['manager_phone']}
+Номер риелтора: {kwargs['manager_phone']}
 """
 
 
