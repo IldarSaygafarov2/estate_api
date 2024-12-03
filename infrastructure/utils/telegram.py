@@ -31,7 +31,7 @@ def create_telegram_message(**kwargs):
 Этажность: {kwargs['storey']}
 Тип: {kwargs['type']}
 Цена: {kwargs['price']}
-Номер менеджера: {kwargs['manager_phone']}
+Номер риелтора: {kwargs['manager_phone']}
 Номер риелтора: {kwargs['realtor_phone']}
 """
 
