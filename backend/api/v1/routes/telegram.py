@@ -1,19 +1,12 @@
-from io import BytesIO
 from typing import Annotated
-import json
 
 import aiohttp
 from fastapi import APIRouter, Depends, Request
 
 from backend.app.config import config
 from backend.app.dependencies import get_repo
-from backend.core.interfaces.estate import EstateForChannelDTO
 from infrastructure.database.repo.requests import RequestsRepo
-from infrastructure.utils.telegram import (
-    compress_image,
-    create_telegram_message,
-    send_message_to_channel,
-)
+from infrastructure.utils.telegram import create_telegram_message
 
 router = APIRouter(
     prefix=config.api_prefix.v1.telegram,
@@ -22,7 +15,7 @@ router = APIRouter(
 
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{config.telegram.token}/sendMediaGroup"
 params = {
-    "chat_id": f"@{config.telegram.channel_username}",
+    "chat_id": "-1002343123218",
 }
 
 
@@ -33,12 +26,6 @@ async def send_to_channel(
     req: Request,
 ):
     estates = await repo.estate.get_estates_by_ids(estate_ids)
-
-    # estate_images = []
-
-    # for estate in estates:
-    #     for image in estate.images:
-    #         estate_images.append(image.url)
 
     errors = []
     for estate in estates:
