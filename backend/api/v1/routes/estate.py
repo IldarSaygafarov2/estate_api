@@ -5,7 +5,12 @@ from fastapi import APIRouter, Body, Depends, File, UploadFile, Query
 from backend.app.config import config
 from backend.app.dependencies import get_repo
 from backend.core.filters.estate import EstateFilter
-from backend.core.interfaces.estate import EstateCreateDTO, EstateDTO, EstateUpdateDTO
+from backend.core.interfaces.estate import (
+    EstateCreateDTO,
+    EstateDTO,
+    EstateUpdateDTO,
+    PaginatedEstateDTO,
+)
 from infrastructure.database.repo.requests import RequestsRepo
 from infrastructure.utils.file import create_estate_directory
 
@@ -19,11 +24,23 @@ router = APIRouter(
 async def get_estates(
     filters: Annotated[EstateFilter, Query()],
     repo: Annotated[RequestsRepo, Depends(get_repo)],
-) -> list[EstateDTO]:
+) -> PaginatedEstateDTO:
     filters = {k: v for k, v in filters.model_dump().items() if v is not None}
     if not filters:
-        return await repo.estate.get_all()
-    return await repo.estate.get_filtered(**filters)
+        items = await repo.estate.get_all(
+            limit=filters.get("limit"), offset=filters.get("limit")
+        )
+    else:
+        items = await repo.estate.get_filtered(**filters)
+
+    items = [EstateDTO.model_validate(estate, from_attributes=True) for estate in items]
+    total = await repo.estate.get_total_estates()
+    return PaginatedEstateDTO(
+        total=total,
+        limit=filters.get("limit"),
+        offset=filters.get("offset"),
+        estates=items,
+    )
 
 
 @router.post("/")
@@ -93,10 +110,8 @@ async def update_estate(
     estate_images_ids = [
         image.id for image in estate_images if image.id not in image_ids
     ]
-    print(estate_images_ids)
 
     for image_id in estate_images_ids:
-        print(image_id)
         await repo.estate_image.delete(estate_image_id=image_id)
 
     estate_directory = create_estate_directory(real_estate_id)

@@ -115,3 +115,10 @@ class EstateUpdateDTO(BaseModel):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+
+
+class PaginatedEstateDTO(BaseModel):
+    total: int
+    limit: int
+    offset: int
+    estates: list[EstateDTO]
