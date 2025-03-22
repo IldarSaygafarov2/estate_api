@@ -6,12 +6,10 @@ from .base import BaseRepo
 
 
 class EstateRepo(BaseRepo):
-    async def get_all(self, limit: int = 10, offset: int = 0):
+    async def get_all(self):
         stmt = (
             select(Estate)
             .options(selectinload(Estate.images))
-            .limit(limit)
-            .offset(offset)
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
