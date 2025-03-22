@@ -10,5 +10,4 @@ class EstateFilter(BaseModel):
     type: Optional[str] = Field(None)
     price_min: Optional[int] = Field(None)
     price_max: Optional[int] = Field(None)
-    limit: int = 10
-    offset: int = 0
+

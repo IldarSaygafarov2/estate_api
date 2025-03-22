@@ -19,15 +19,12 @@ class EstateRepo(BaseRepo):
     async def get_filtered(self, **filters):
         price_min = filters.pop("price_min", None)
         price_max = filters.pop("price_max", None)
-        limit = filters.pop("limit", 10)
-        offset = filters.pop("offset", 0)
 
         stmt = select(Estate).options(selectinload(Estate.images)).filter_by(**filters)
 
         if price_min is not None and price_max is not None:
             stmt = stmt.where(Estate.price > price_min).where(Estate.price < price_max)
 
-        stmt = stmt.filter_by(**filters).limit(limit).offset(offset)
         result = await self.session.execute(stmt)
         return result.scalars().all()
 

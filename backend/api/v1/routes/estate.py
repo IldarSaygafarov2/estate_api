@@ -24,23 +24,15 @@ router = APIRouter(
 async def get_estates(
     filters: Annotated[EstateFilter, Query()],
     repo: Annotated[RequestsRepo, Depends(get_repo)],
-) -> PaginatedEstateDTO:
+) -> list[EstateDTO]:
     filters = {k: v for k, v in filters.model_dump().items() if v is not None}
     if not filters:
-        items = await repo.estate.get_all(
-            limit=filters.get("limit"), offset=filters.get("limit")
-        )
+        items = await repo.estate.get_all()
     else:
         items = await repo.estate.get_filtered(**filters)
 
     items = [EstateDTO.model_validate(estate, from_attributes=True) for estate in items]
-    total = await repo.estate.get_total_estates()
-    return PaginatedEstateDTO(
-        total=total,
-        limit=filters.get("limit"),
-        offset=filters.get("offset"),
-        estates=items,
-    )
+    return items
 
 
 @router.post("/")
