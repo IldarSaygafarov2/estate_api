@@ -14,6 +14,26 @@ class EstateRepo(BaseRepo):
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
+    async def get_paginated(self, **filters):
+        price_min = filters.pop("price_min", None)
+        price_max = filters.pop("price_max", None)
+        limit = filters.pop("limit", None)
+        offset = filters.pop("offset", None)
+
+        stmt = (
+            select(Estate)
+            .options(selectinload(Estate.images))
+            .filter_by(**filters)
+            .limit(limit)
+            .offset(offset)
+        )
+
+        if price_min is not None and price_max is not None:
+            stmt = stmt.where(Estate.price > price_min).where(Estate.price < price_max)
+
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+
     async def get_filtered(self, **filters):
         price_min = filters.pop("price_min", None)
         price_max = filters.pop("price_max", None)

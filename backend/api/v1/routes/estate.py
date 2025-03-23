@@ -1,15 +1,15 @@
-from typing import Annotated, Optional, List
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Body, Depends, File, UploadFile, Query
 
 from backend.app.config import config
 from backend.app.dependencies import get_repo
-from backend.core.filters.estate import EstateFilter
+from backend.core.filters.estate import EstateFilter, EstatePaginatedFilter
 from backend.core.interfaces.estate import (
     EstateCreateDTO,
     EstateDTO,
-    EstateUpdateDTO,
     PaginatedEstateDTO,
+    EstateUpdateDTO,
 )
 from infrastructure.database.repo.requests import RequestsRepo
 from infrastructure.utils.file import create_estate_directory
@@ -34,6 +34,30 @@ async def get_estates(
     items = [EstateDTO.model_validate(estate, from_attributes=True) for estate in items]
     return items
 
+
+@router.get("/paginated")
+async def get_paginated_estates(
+        repo: Annotated[RequestsRepo, Depends(get_repo)],
+        filters: Annotated[EstatePaginatedFilter, Query()],
+) -> PaginatedEstateDTO:
+    filters = {k: v for k, v in filters.model_dump().items() if v is not None}
+    if not filters:
+        items = await repo.estate.get_all()
+    else:
+        items = await repo.estate.get_paginated(**filters)
+
+    items = [EstateDTO.model_validate(estate, from_attributes=True) for estate in items]
+
+    total = await repo.estate.get_total_estates()
+    limit = filters.get("limit", 10)
+    offset = filters.get("offset", 0)
+
+    return PaginatedEstateDTO(
+        total=total,
+        limit=limit,
+        offset=offset,
+        estates=items
+    )
 
 @router.post("/")
 async def create_estate(
